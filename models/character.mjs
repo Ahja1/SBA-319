@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose, { mongo } from 'mongoose';
 
-const CharacterSchema = new mongoose.Schema ({
+const characterSchema = new mongoose.Schema ({
     name: {
         type: String,
-        required: True 
+        required: true 
     },
     color: {
     type: String,
@@ -12,6 +12,6 @@ const CharacterSchema = new mongoose.Schema ({
 superPower: Boolean
 });
 
-const Fruit = mongoose.model('Character', CharacterSchema);
+const Character = mongoose.model('Character', characterSchema);
 
 export default Character;
