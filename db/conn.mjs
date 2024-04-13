@@ -4,7 +4,7 @@ dotenv.config();
 
 //Global Config
 const mongoURI = process.env.MONGO_URI;
-//console.log(mongoURI);
+ console.log(mongoURI);
 const db = mongoose.connection;
 
 //Connect to Mongo
