@@ -1,6 +1,51 @@
 import express from 'express';
 const router = express.Router();
 
+router.get("/seed", async (req, res) => {
+    try {
+        const characters = [
+            {
+                name: 'Robin',
+                color: 'Red',
+                superPower: true
+            },
+            {
+                name: 'Cyborg',
+                color: 'Blue',
+                superPower: false
+            },
+            {
+                name: 'Starfire',
+                color: 'Orange',
+                superPower: true
+            },
+            {
+                name: 'Raven',
+                color: 'Purple',
+                superPower: true
+            },
+            {
+                name: 'Beast Boy',
+                color: 'Green',
+                superPower: true
+            },
+        ];
+
+        await Character.insertMany(characters);
+
+        res.status(200).json({ message: 'Database seeded successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+
+// N - New - allows a user to input a new character
+router.get('/new', (req, res) => {
+    res.render('character/New');
+})
+
 // GET all characters
 router.get('/characters', async (req, res) => {
     try {
