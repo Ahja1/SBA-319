@@ -25,7 +25,7 @@ app.engine('jsx', jsxViewEngine());
 app.use(express.urlencoded({extended: false}));
 app.use(methodOverride('_method'));
 ///
-app.use("/characters", characterRoutes); // Mount characterRoutes at /characters
+app.use("/characters", characterRoutes);
 
 app.get('/', (req, res) => {
     res.send(
