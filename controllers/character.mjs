@@ -1,136 +1,44 @@
 import express from 'express';
 const router = express.Router();
-import Character from '../models/character.mjs';
-import db from '../db/conn.mjs';
 
-// seed route
-router.get("/seed", async (req, res) => {
-    console.log('in seed');
+// GET all characters
+router.get('/characters', async (req, res) => {
     try {
-        await Character.create([
-            {
-                name: 'starfire',
-                color: "pink",
-                superPower: true
-            }, 
-            {
-                name: 'raven',
-                color: 'purple',
-                superPower: true
-            }, 
-            {
-                name: 'robin',
-                color: 'orange',
-                superPower: false
-            }
-        ])
-        res.status(200).redirect('/characters');
+        res.status(200).json({ message: 'Get all characters' });
     } catch (err) {
-        res.status(400).send(err);
+        res.status(500).json({ error: err.message });
     }
 });
 
-    
-        ///////////////////////////////////////////////
-        
-router.get('/', async (req, res) => {
+
+// POST a new post
+router.post('/posts', async (req, res) => {
     try {
-        const foundCharacter = await Character.find({});
-        res.status(200).render('characters/Index', { characters: foundCharacters})
+        const newPost = await Post.create(req.body);
+        res.status(201).json(newPost);
     } catch (err) {
-        res.status(400).send(err);
+        res.status(400).json({ error: err.message });
     }
-})
+});
 
-// N - New - allows a user to input a new character
-router.get('/new', (req, res) => {
-    res.render('characters/New');
-})
-
-/// - Delete-permanantly 
-router.delete('/:id', async(req, res) => {
-    try{
-        const deletedCharacter = await Character.findByIdAndDelete(req.params.id);
-        console.log(deletedCharacter);
-        res.status(200).redirect('/characters');
-        } catch (err) {
-            res.status(400).send(err);
-        }
-})
-
-// U - UPDATE
-router.put('/:id', async (req, res) => {
-    if (req.body.superPower === 'on') {
-        req.body.superPower = true;
-    } else {
-        req.body.superPower = false;
-    }
-
+// PUT/PATCH an existing post
+router.put('/posts/:id', async (req, res) => {
     try {
-        const updatedCharacter = await Character.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true },
-        );
-            console.log(updatedCharacter);
-        res.redirect(`/characters/${req.params.id}`);
+        const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.status(200).json(updatedPost);
     } catch (err) {
-        res.status(400).send(err);
+        res.status(400).json({ error: err.message });
     }
-})
+});
 
-
-//Starting with post route so I can see in my Db
-router.post('/', async(req, res) => {
-     if (req.body.superPower === 'on') { //if checked, req.body is set to on
-         req.body.superPower = true;
-     } else {                                 //if not check it is undefinied 
-         req.body.superPower = false;
-     }
-    console.log(req.body)
-
+// DELETE a post
+router.delete('/posts/:id', async (req, res) => {
     try {
-        const createdCharacter = await Character.create(req.body);
-        res.status(200).redirect('/characters');
+        await Post.findByIdAndDelete(req.params.id);
+        res.status(204).end();
     } catch (err) {
-        res.status(400).send(err);
+        res.status(400).json({ error: err.message });
     }
-})
-
-// C create
-router.get('/:id', async (req, res) => {
-    try {
-        const foundCharacter = await Character.findById(req.params.id);
-        res.render('characterss/Show', {character: foundCharacter});
-    } catch (err) {
-        res.status(400).send(err);
-    }
-})
-
-// E - EDIT - update an existing entry in the database
-router.get("/:id/edit", async (req, res) => {
-    try {
-        const foundCharacter = await Character.findById(req.params.id);
-        res.status(200).render('characters/Edit', {character: foundCharacter});
-    } catch (err) {
-        res.status(400).send(err);
-    }
-})
-
-
-// S - SHOW - show route displays details of an individual character
-router.get('/:id', async (req, res) => {
-    try {
-        const foundCharacter = await Character.findById(req.params.id);
-        res.render('characters/Show', {character: foundCharacter});
-    } catch (err) {
-        res.status(400).send(err);
-    }
-})
-
+});
 
 export default router;
-
-
-
-

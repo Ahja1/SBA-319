@@ -38,4 +38,4 @@ class Index extends React.Component {
     }
 }
 
-module.exports = Index;
+module.exports = index;
